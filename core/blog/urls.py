@@ -11,4 +11,5 @@ urlpatterns = [
     # path('go-to-geeksforgeeks', RedirectView.as_view(url="https://geeksforgeeks.org/"), name='redirect-to-geeksforgeeks'),
     # path('go-to-cbv-index', RedirectView.as_view(pattern_name="blog:cbv-index"), name='redirect-to-cbv-index'),
     path('go-to-geeksforgeeks', views.RedirectToGeeks.as_view(), name='redirect-to-geeksforgeeks'),
+    path('post/', views.PostListView.as_view(), name='post-list'),    
 ]

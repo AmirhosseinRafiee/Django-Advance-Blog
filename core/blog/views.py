@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, RedirectView
+from django.views.generic.list import ListView
 from .models import Post
 
 ''' Function based view show a template
@@ -37,3 +38,11 @@ class RedirectToGeeks(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return super().get_redirect_url(*args, **kwargs)
+
+
+class PostListView(ListView):
+    # model = Post
+    queryset = Post.objects.filter(status=True)
+    context_object_name = 'posts'
+    paginate_by = 2
+    ordering = '-published_date'
