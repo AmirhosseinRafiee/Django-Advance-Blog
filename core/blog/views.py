@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from .models import Post
 
 ''' Function based view show a template
@@ -46,3 +47,10 @@ class PostListView(ListView):
     context_object_name = 'posts'
     paginate_by = 2
     ordering = '-published_date'
+
+
+
+class PostDetailView(DetailView):
+    # model = Post 
+    queryset = Post.objects.filter(status=True)
+    context_object_name = 'post'
