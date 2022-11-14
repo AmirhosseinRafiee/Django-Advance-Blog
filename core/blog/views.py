@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
 from .models import Post
+from .forms import PostFrom
 
 ''' Function based view show a template
 def index_view(request):
@@ -54,3 +56,24 @@ class PostDetailView(DetailView):
     # model = Post 
     queryset = Post.objects.filter(status=True)
     context_object_name = 'post'
+
+
+'''
+class PostCreateView(FormView):
+    template_name = 'post_form.html'
+    form_class = PostForm
+    success_url = '/blog/post/'
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+'''
+
+class PostCreateView(CreateView):
+    model = Post
+    # fields = ('author','title', 'content', 'status', 'category', 'published_date')
+    form_class = PostFrom
+    success_url = '/blog/post/'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
