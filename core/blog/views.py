@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Post
 from .forms import PostFrom
 
@@ -52,7 +53,7 @@ class PostListView(ListView):
 
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     # model = Post 
     queryset = Post.objects.filter(status=True)
     context_object_name = 'post'
@@ -68,7 +69,8 @@ class PostCreateView(FormView):
         return super().form_valid(form)
 '''
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = 'blog.add_post'
     model = Post
     # fields = ('author','title', 'content', 'status', 'category', 'published_date')
     form_class = PostFrom
@@ -78,12 +80,14 @@ class PostCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-class PostEditView(UpdateView):
+class PostEditView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = 'blog.change_post'
     model = Post
     form_class = PostFrom
     success_url = '/blog/post/'
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = 'blog.delete_post'
     model = Post
     success_url = '/blog/post'
