@@ -1,13 +1,14 @@
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import PostSerializer
 from ...models import Post
 
 """
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -40,6 +41,11 @@ def post_detail(request, id):
 
 """
 
+'''
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
 class PostListView(APIView):
     """ get a list of posts and create new post """
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -57,9 +63,14 @@ class PostListView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+'''
 
-
-
+'''
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 class PostDetailView(APIView):
     """ get detail of the post and edit plus remove it """
@@ -85,4 +96,19 @@ class PostDetailView(APIView):
         post = get_object_or_404(Post, pk=id, status=True)
         post.delete()
         return Response({"detail": "item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+'''
+
+class PostListView(ListCreateAPIView):
+    """ get a list of posts and create new post """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
+
+class PostDetailView(RetrieveUpdateDestroyAPIView):
+    """ get detail of the post and edit plus remove it """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
 
