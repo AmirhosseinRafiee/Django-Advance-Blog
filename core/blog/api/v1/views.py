@@ -3,9 +3,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .serializers import PostSerializer
-from ...models import Post
+from .serializers import PostSerializer, CategorySerializer
+from ...models import Post, Category
 
+# Example for Function Based View
 """
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -44,10 +45,11 @@ def post_detail(request, id):
 
 """
 
+# Example for ApiView in Class Based View
 '''
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import status
 
 class PostListView(APIView):
     """ get a list of posts and create new post """
@@ -66,14 +68,6 @@ class PostListView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-'''
-
-'''
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import status
-from django.shortcuts import get_object_or_404
 
 class PostDetailView(APIView):
     """ get detail of the post and edit plus remove it """
@@ -101,6 +95,8 @@ class PostDetailView(APIView):
         return Response({"detail": "item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 '''
 
+# Example for GenericApiView in Class Based View
+'''
 class PostListView(ListCreateAPIView):
     """ get a list of posts and create new post """
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -113,31 +109,15 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+'''
 
-
-class PostViewSet(viewsets.ViewSet):
+# Example for ViewSet in Class Based View
+class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
 
-
-    def list(self, request):
-        serializer = self.serializer_class(self.queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        post_object = get_object_or_404(self.queryset, pk=pk)
-        serializer = PostSerializer(post_object)
-        return Response(serializer.data)
-
-    def create(self, request):
-        pass
-
-    def update(self, request, pk=None):
-        pass
-
-    def partial_update(self, request, pk=None):
-        pass
-
-    def destroy(self, request, pk=None):
-        pass
+class CategoryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
