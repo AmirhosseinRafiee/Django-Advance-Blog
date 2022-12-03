@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .serializers import PostSerializer, CategorySerializer
+from .permissions import IsOwnerOrReadOnly
 from ...models import Post, Category
 
 # Example for Function Based View
@@ -113,7 +114,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
 
 # Example for ViewSet in Class Based View
 class PostViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
 
