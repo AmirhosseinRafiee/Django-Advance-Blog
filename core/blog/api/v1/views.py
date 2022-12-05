@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
+from .paginations import DefaultPagination
 from ...models import Post, Category
 
 # Example for Function Based View
@@ -123,6 +124,7 @@ class PostViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'author']
     search_fields = ['title', 'content']
     ordering_fields = ['published_date']
+    pagination_class = DefaultPagination
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
