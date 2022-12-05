@@ -2,7 +2,9 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
 from ...models import Post, Category
@@ -117,6 +119,10 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category', 'author']
+    search_fields = ['title', 'content']
+    ordering_fields = ['published_date']
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
