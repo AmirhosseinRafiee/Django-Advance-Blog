@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
 from .paginations import DefaultPagination
+from .filters import PostFilters
 from ...models import Post, Category
 
 # Example for Function Based View
@@ -121,7 +122,8 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category', 'author']
+    # filterset_fields = {'category':["exact","in"], 'author':["exact"],'status':["exact"]}
+    filterset_class = PostFilters
     search_fields = ['title', 'content']
     ordering_fields = ['published_date']
     pagination_class = DefaultPagination
