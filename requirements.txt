@@ -1,6 +1,13 @@
+# general madules
 Django >3.2,<3.3
 python-decouple
 Pillow
 djangorestframework
+
+
+# third party madules
 markdown
 django-filter
+drf-yasg[validation]
+
+# deployment madules
