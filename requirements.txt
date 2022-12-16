@@ -4,10 +4,10 @@ python-decouple
 Pillow
 djangorestframework
 
-
 # third party madules
 markdown
 django-filter
 drf-yasg[validation]
+djangorestframework-simplejwt
 
 # deployment madules

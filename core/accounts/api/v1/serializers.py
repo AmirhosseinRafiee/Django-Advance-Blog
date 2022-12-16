@@ -3,7 +3,8 @@ from django.core import exceptions
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
-from ...models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from ...models import User, Profile
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -14,7 +15,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('password1'):
-            raise serializers.ValidationError({'detail': 'password does not match'})
+            raise serializers.ValidationError({'detail': 'passwords does not match'})
         try :
             validate_password(password=attrs.get('password'))
         except exceptions.ValidationError as e:
@@ -65,4 +66,30 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, attrs):
+        validate_data = super().validate(attrs)
+        validate_data['user_id'] = self.user.id
+        validate_data['email'] = self.user.email
+        return validate_data
 
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('new_password1'):
+            raise serializers.ValidationError({'detail': 'passwords does not match'})
+        try :
+            validate_password(password=attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({'new password': list(e.messages)})
+        return super().validate(attrs)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email', read_only=True)
+    class Meta:
+        model = Profile
+        fields = ('id', 'email','first_name', 'last_name', 'image', 'description')
