@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from ...models import Profile
-from .serializers import RegistrationSerializer, CustomTokenObtainPairSerializer, ChangePasswordSerializer, ProfileSerializer
+from .serializers import RegistrationSerializer, CustomTokenObtainPairSerializer, ChangePasswordSerializer, ProfileSerializer, CustomAuthTokenSerializer
 
 User = get_user_model()
 class RegistrationApiView(generics.GenericAPIView):
@@ -26,7 +26,7 @@ class RegistrationApiView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomObtainAuthToken(ObtainAuthToken):
-
+    serializer_class = CustomAuthTokenSerializer
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)

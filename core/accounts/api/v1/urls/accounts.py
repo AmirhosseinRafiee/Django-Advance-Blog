@@ -1,9 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from . import views
-
-app_name = 'api-v1'
+from .. import views
 
 urlpatterns = [
     # registration
@@ -18,6 +15,4 @@ urlpatterns = [
     path('jwt/create/', views.CustomTokenObtainPairView.as_view(), name='token_create'),
     path('jwt/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('jwt/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    # profile
-    path('profile/', views.ProfileApiView.as_view(), name='profile'),
 ]
