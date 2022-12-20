@@ -12,3 +12,17 @@ services:
     environment:
       - SECRET_KEY=test
       - DEBUG=True
+  smtp-server:
+    image: mailhog/mailhog
+    restart: always
+    expose:
+      - 1025
+      - 8025
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    volumes:
+        - mailhog-data:/mailhog/
+
+volumes:
+  mailhog-data:
