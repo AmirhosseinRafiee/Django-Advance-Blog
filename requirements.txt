@@ -11,3 +11,6 @@ drf-yasg[validation]
 djangorestframework-simplejwt
 
 # deployment madules
+
+# email third party madules
+django-mail-templated

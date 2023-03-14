@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -8,8 +7,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from ...models import Profile
+from mail_templated import EmailMessage
 from .serializers import RegistrationSerializer, CustomTokenObtainPairSerializer, ChangePasswordSerializer, ProfileSerializer, CustomAuthTokenSerializer
+from ..utils import EmailThread
+from ...models import Profile
 
 User = get_user_model()
 class RegistrationApiView(generics.GenericAPIView):
@@ -86,13 +87,11 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
         return obj
 
 class TestEmailSend(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        send_mail(
-            subject = "Test Email",
-            message = "This is a test email",
-            from_email = None,   # This will have no effect is you have set DEFAULT_FROM_EMAIL in settings.py
-            recipient_list = ['<your_recipient_email>'],    # This is a list
-            fail_silently = False   
-        )
+        user = request.user
+        email_object = EmailMessage('email/hello.tpl', {'name': 'amirhossein'}, 'admin@admin.com', to=[user.email])
+        EmailThread(email_object).start()
+        
         return Response('email sent')
