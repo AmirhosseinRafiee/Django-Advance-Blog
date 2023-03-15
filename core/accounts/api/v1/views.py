@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
@@ -15,7 +16,8 @@ from mail_templated import EmailMessage
 from datetime import timedelta
 from .serializers import (RegistrationSerializer, CustomTokenObtainPairSerializer,
                         ChangePasswordSerializer, ProfileSerializer,
-                        CustomAuthTokenSerializer, ActivationResendSerializer)
+                        CustomAuthTokenSerializer, ActivationResendSerializer, 
+                        ResetPasswordSerializer, ResetPasswordConfirmSerializer)
 from ..utils import EmailThread
 from ...models import Profile
 
@@ -155,3 +157,38 @@ class ActivationResendApiView(generics.GenericAPIView):
         access_token = refresh.access_token
         access_token.set_exp(lifetime=timedelta(minutes=10))
         return str(access_token)
+    
+class ResetPasswordApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        jwt_access_token = self.get_access_token_for_user(user)
+        email_object = EmailMessage('email/reset-password.tpl', {'token': jwt_access_token}, 'admin@admin.com', to=[user.email])
+        EmailThread(email_object).start()
+        return Response({"details":"reset password send successfully"},status=status.HTTP_200_OK)
+
+    def get_access_token_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+        access_token.set_exp(lifetime=timedelta(minutes=10))
+        return str(access_token)
+    
+class ResetPasswordConfirmApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordConfirmSerializer
+    
+    def post(self, request, token, *args, **kwargs):
+        serializer = ResetPasswordConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            decode_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        except ExpiredSignatureError:
+            return Response({'details': 'token has been expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except (InvalidSignatureError, DecodeError):
+            return Response({'details':'token is not valid'},status=status.HTTP_400_BAD_REQUEST)
+        user = get_object_or_404(User, id=decode_payload['user_id'])
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+        return Response({'details': 'password has been changed successfully'}, status=status.HTTP_200_OK)

@@ -16,6 +16,8 @@ services:
     image: mailhog/mailhog
     restart: always
     container_name: mailhog
+    logging:
+      driver: 'none'  # disable saving logs
     expose:
       - 1025
       - 8025

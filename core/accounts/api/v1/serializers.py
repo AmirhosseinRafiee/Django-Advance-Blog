@@ -1,6 +1,6 @@
-from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
@@ -112,3 +112,28 @@ class ActivationResendSerializer(serializers.Serializer):
             raise serializers.ValidationError({'details':'user is already verified'})
         attrs['user'] = user
         return super().validate(attrs)
+    
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        try:
+            user = User.objects.get(email=attrs['email'])
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'details':'user does not exist'})
+        attrs['user'] = user
+        return super().validate(attrs)
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=255)
+    confirm_password = serializers.CharField(max_length=255)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({'details':'passwords does not match'})
+        try :
+            validate_password(password=attrs.get('password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({'password': list(e.messages)})
+        return super().validate(attrs)
+
