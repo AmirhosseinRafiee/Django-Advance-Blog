@@ -1,9 +1,7 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+# from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import viewsets
-from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
@@ -116,6 +114,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.filter(status=True)
 '''
 
+
 # Example for ViewSet in Class Based View
 class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
@@ -124,9 +123,10 @@ class PostViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     # filterset_fields = {'category':["exact","in"], 'author':["exact"],'status':["exact"]}
     filterset_class = PostFilters
-    search_fields = ['title', 'content']
-    ordering_fields = ['published_date']
+    search_fields = ["title", "content"]
+    ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]

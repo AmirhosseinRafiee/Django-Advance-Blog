@@ -14,3 +14,7 @@ djangorestframework-simplejwt
 
 # email third party madules
 django-mail-templated
+
+# refactoring and tests
+balck
+flake8
