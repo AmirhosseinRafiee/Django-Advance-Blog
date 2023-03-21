@@ -18,3 +18,5 @@ django-mail-templated
 # refactoring and tests
 balck
 flake8
+pytest
+pytest-django
