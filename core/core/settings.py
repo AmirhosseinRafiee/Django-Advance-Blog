@@ -175,5 +175,5 @@ EMAIL_PORT = 1025
 # simplejwt configuration
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=8),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
