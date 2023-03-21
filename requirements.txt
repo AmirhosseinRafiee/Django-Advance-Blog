@@ -16,5 +16,5 @@ djangorestframework-simplejwt
 django-mail-templated
 
 # refactoring and tests
-balck
+black
 flake8
