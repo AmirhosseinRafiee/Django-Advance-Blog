@@ -66,6 +66,10 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "post"
 
 
+class PostListApiView(TemplateView):
+    template_name = "blog/blog-list-api.html"
+
+
 """
 class PostCreateView(FormView):
     template_name = 'post_form.html'
