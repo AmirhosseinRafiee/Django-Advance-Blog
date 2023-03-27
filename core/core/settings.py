@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "mail_templated",
     "corsheaders",
+    "django_celery_beat",
     "accounts",
     "blog",
 ]
@@ -181,3 +182,13 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# celery configurations
+CELERY_BROKER_URL = "redis://redis:6379/1"
+# CELERY_BEAT_SCHEDULE = {
+#     "send_mail": {
+#         "task": "accounts.tasks.send_email_task",
+#         "schedule": 10,
+#         # "args": 
+#     }
+# }
