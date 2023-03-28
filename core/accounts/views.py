@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.cache import cache_page
+
 # from django.core.cache import cache
 import requests
 from .tasks import send_email_task

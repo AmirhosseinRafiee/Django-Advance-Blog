@@ -1,4 +1,4 @@
-# from django.urls import path
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 from . import views
 
@@ -16,4 +16,7 @@ router.register("category", views.CategoryViewSet, basename="category")
 #     # path('post/', views.PostViewSet.as_view({'get':'list'}), name='post-list'),
 #     # path('post/<int:pk>/', views.PostViewSet.as_view({'get':'retrieve'}), name='post-detail'),
 # ]
-urlpatterns = router.urls
+
+urlpatterns = [path("weather/", views.WeatherApiView.as_view(), name="weather")]
+
+urlpatterns += router.urls
