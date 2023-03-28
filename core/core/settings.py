@@ -189,7 +189,7 @@ CELERY_BROKER_URL = "redis://redis:6379/1"
 #     "send_mail": {
 #         "task": "accounts.tasks.send_email_task",
 #         "schedule": 10,
-#         # "args": 
+#         # "args":
 #     }
 # }
 
@@ -200,6 +200,6 @@ CACHES = {
         "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
