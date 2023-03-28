@@ -6,5 +6,6 @@ app_name = "accounts"
 urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("send-email/", views.send_email, name="send-email"),
+    path("test/", views.test_view, name="test"),
     path("api/v1/", include("accounts.api.v1.urls")),
 ]
