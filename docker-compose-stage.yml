@@ -1,6 +1,15 @@
 version: "3.9"
 
 services: 
+  db:
+    image: postgres:15-alpine
+    container_name: db-postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+
   redis:
     image: redis
     restart: always
@@ -24,6 +33,7 @@ services:
       - DEBUG=True
     depends_on:
       - redis
+      - db
 
   nginx:
     image: nginx
@@ -58,6 +68,7 @@ services:
       - redis
 
 volumes:
+  postgres_data:
   static_volume:
   media_volume:
   
