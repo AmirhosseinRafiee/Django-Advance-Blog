@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Django Project Test and Deploy
 
 on:
   push:
