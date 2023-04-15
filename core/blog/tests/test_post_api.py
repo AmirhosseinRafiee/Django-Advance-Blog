@@ -14,12 +14,6 @@ def api_client():
 
 
 @pytest.fixture
-def api_client():
-    client = APIClient()
-    return client
-
-
-@pytest.fixture
 def common_user():
     user = get_user_model().objects.create_user(
         email="test@test.com", password="a/@123456", is_verified=True
