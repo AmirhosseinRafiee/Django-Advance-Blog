@@ -16,8 +16,8 @@ RUN pip3 install -r requirements.txt
 
 COPY ./core /app
 
-RUN sed -i 's/\r$//g' /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# RUN sed -i 's/\r$//g' /app/entrypoint.sh
+# RUN chmod +x /app/entrypoint.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+# ENTRYPOINT ["sh", "/app/entrypoint.sh"]
