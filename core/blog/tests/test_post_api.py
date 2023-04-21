@@ -12,12 +12,14 @@ def api_client():
     client = APIClient()
     return client
 
+
 @pytest.fixture
 def common_user():
     user = get_user_model().objects.create_user(
         email="test@test.com", password="a/@123456", is_verified=True
     )
     return user
+
 
 @pytest.fixture
 def post_object(common_user):
@@ -31,6 +33,7 @@ def post_object(common_user):
     )
     return post
 
+
 @pytest.fixture
 def common_user_2():
     user = get_user_model().objects.create_user(
@@ -41,7 +44,6 @@ def common_user_2():
 
 @pytest.mark.django_db
 class TestPostApi:
-
     def test_get_post_list_response_200_status(self, api_client):
         url = reverse("blog:api-v1:post-list")
         response = api_client.get(url)
@@ -100,7 +102,9 @@ class TestPostApi:
         assert response.status_code == 201
         assert Post.objects.get(title="test title")
 
-    def test_create_post_invalid_data_response_400_status(self, api_client, common_user):
+    def test_create_post_invalid_data_response_400_status(
+        self, api_client, common_user
+    ):
         url = reverse("blog:api-v1:post-list")
         data = {
             "title": "test title",
@@ -110,7 +114,9 @@ class TestPostApi:
         response = api_client.post(url, data)
         assert response.status_code == 400
 
-    def test_delete_post_response_204_status(self, api_client, common_user, post_object):
+    def test_delete_post_response_204_status(
+        self, api_client, common_user, post_object
+    ):
         post = post_object
         url = reverse("blog:api-v1:post-detail", kwargs={"pk": post.id})
         # api_client.login(email="test@test.com", password="a/@123456")
@@ -143,7 +149,9 @@ class TestPostApi:
         assert post.title == "edited title"
 
     # user2 is authenticated from force_authenticate called
-    def test_delete_post_response_403_status(self, api_client, common_user_2, post_object):
+    def test_delete_post_response_403_status(
+        self, api_client, common_user_2, post_object
+    ):
         user2 = common_user_2
         api_client.logout()
         api_client.force_authenticate(user=user2)
@@ -153,7 +161,9 @@ class TestPostApi:
         assert response.status_code == 403
         assert Post.objects.get(id=post.id)
 
-    def test_edit_post_response_403_status(self, api_client, common_user_2, post_object):
+    def test_edit_post_response_403_status(
+        self, api_client, common_user_2, post_object
+    ):
         user2 = common_user_2
         post = post_object
         url = reverse("blog:api-v1:post-detail", kwargs={"pk": post.id})
