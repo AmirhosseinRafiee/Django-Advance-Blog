@@ -19,7 +19,12 @@ jobs:
       run: docker compose -f docker-compose-stage.yml exec backend sh -c "flake8 && pytest ."
 
   Deploy:
+    if: |
+      always()
+      && contains(needs.*.result, 'success')
+      && !contains(needs.*.result, 'failure')
     name: Deploy
+    needs: Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
