@@ -1,18 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
+# echo "Flush the manage.py command it any"
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
-      sleep 0.1
-    done
+# while ! python manage.py flush --no-input 2>&1; do
+#   echo "Flusing django manage command"
+#   sleep 3
+# done
 
-    echo "PostgreSQL started"
-fi
+echo "Migrate the Database at startup of project"
 
-python manage.py flush --no-input
-python manage.py makemigrations
-python manage.py migrate
+# Wait for few minute and run db migraiton
+while ! python manage.py migrate  2>&1; do
+   echo "Migration is in progress status"
+   sleep 3
+done
+
+echo "Django docker is fully configured successfully."
 
 exec "$@"
