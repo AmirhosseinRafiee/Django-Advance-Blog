@@ -15,7 +15,7 @@ django-cors-headers
 gunicorn
 
 # postgres db madules
-psycopg2-binary
+# psycopg2-binary
 
 # email third party madules
 django-mail-templated
